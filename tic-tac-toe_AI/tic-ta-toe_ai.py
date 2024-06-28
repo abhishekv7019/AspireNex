@@ -21,10 +21,18 @@ circle_width = 15
 cross_width = 25
 
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Tic Tac Toe")
+pygame.display.set_caption("Tic Tac Toe ")
 screen.fill(black)
 
 board = np.zeros((board_rows, board_columns))
+
+
+font = pygame.font.Font(None, 54)
+
+
+overlay = pygame.Surface((width, height))
+overlay.set_alpha(200) 
+overlay.fill(black)
 
 def draw_lines(color=white):
     for i in range(1, board_rows):
@@ -118,14 +126,23 @@ def restart_game():
     for row in range(board_rows):
         for col in range(board_columns):
             board[row][col] = 0
+    best_move()  
+    draw_figure()
+
+def display_message(message, color):
+    screen.blit(overlay, (0, 0))  
+    text = font.render(message, True, color)
+    text_rect = text.get_rect(center=(width // 2, height // 2))
+    screen.blit(text, text_rect)
+    pygame.display.update()
+    pygame.time.wait(2000)  
 
 draw_lines()
 
-player = 2  
+player = 1
 game_over = False
 
-best_move()
-player =1
+restart_game()  
 
 while True:
     for event in pygame.event.get():
@@ -139,22 +156,23 @@ while True:
                 mark_player(mouseY, mouseX, player)
                 if check_win(player):
                     game_over = True
+                    
                 player = player % 2 + 1
                 if not game_over:
                     if best_move():
                         if check_win(2):
                             game_over = True
+                            
                         player = player % 2 + 1
                 if not game_over:
                     if is_board_full():
                         game_over = True
+                        
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
-                restart_game()
                 game_over = False
-                player = 2  
-                best_move()
-                player = 1  
+                player = 1
+                restart_game()
 
     if not game_over:
         draw_figure()
@@ -162,11 +180,15 @@ while True:
         if check_win(1):
             draw_figure(green)
             draw_lines(green)
+            display_message("Player Wins!", green)
+            
         elif check_win(2):
             draw_figure(red)
             draw_lines(red)
+            display_message("Computer Wins!", red)
         else:
             draw_figure(grey)
             draw_lines(grey)
+            display_message("Draw!", grey)
 
     pygame.display.update()
