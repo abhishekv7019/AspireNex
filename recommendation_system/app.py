@@ -46,11 +46,20 @@ def find_similar_movies(movie_id,  k, metric='cosine'):
     neighbour_ids.pop(0)
     return neighbour_ids
 
-movie_id=1 # Here we enter the movie_id according to the dataset
+
+while True:
+    try:
+        movie_id = int(input("Enter movie id for movie recommendation , please refer movies1.csv file to enter a valid movie_id:"))
+        break  
+    except ValueError:
+        print("Invalid input. Please enter a valid integer.")
+
+    
 
 similar_movies = find_similar_movies(movie_id,  10, metric='cosine')
-movie_title = movies[movies['movieId']==movie_id]['title'].values[0]
 
-print(f"Because you watched {movie_title}:")
-for i in similar_movies:
-    print(movies[movies['movieId']==i]['title'].values[0])
+if(len(similar_movies)>0):
+    movie_title = movies[movies['movieId']==movie_id]['title'].values[0]
+    print(f"Because you watched {movie_title}:")
+    for i in similar_movies:
+        print(movies[movies['movieId']==i]['title'].values[0])
