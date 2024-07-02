@@ -46,7 +46,7 @@ def find_similar_movies(movie_id,  k, metric='cosine'):
     neighbour_ids.pop(0)
     return neighbour_ids
 
-movie_id=10
+movie_id=1 # Here we enter the movie_id according to the dataset
 
 similar_movies = find_similar_movies(movie_id,  10, metric='cosine')
 movie_title = movies[movies['movieId']==movie_id]['title'].values[0]
